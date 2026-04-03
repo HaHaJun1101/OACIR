@@ -1,0 +1,31 @@
+# ==============================================================================
+# OACIR & AdaFocal Environment Requirements
+# ==============================================================================
+
+# Core Frameworks
+torch==2.0.1
+torchvision==0.15.2
+
+# BLIP-2 / LAVIS Core Dependencies
+salesforce-lavis==1.0.2
+transformers==4.26.0
+timm==0.4.12
+fairscale==0.4.4
+omegaconf==2.3.0
+iopath==0.1.10
+webdataset==0.2.86
+einops==0.7.0
+
+# Data Processing, Logging & Visualization
+numpy==1.26.4
+pandas==2.2.0
+Pillow==10.3.0
+tqdm==4.66.1
+scikit-image==0.22.0
+opencv-python-headless==4.5.5.64
+
+# OpenCLIP
+open_clip_torch==2.32.0
+
+# Hugging Face Hub
+huggingface-hub==0.34.4
