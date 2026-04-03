@@ -2,7 +2,9 @@
   <img src='assets/OACIR_logo.png' style="height:120px" alt="OACIR Logo"></img>
 </div>
 
-<h2 align="center"><strong>Beyond Semantic Search: Towards Referential Anchoring in Composed Image Retrieval</strong></h2>
+<h2 align="center"><strong>Beyond Semantic Search:
+  <br>
+  Towards Referential Anchoring in Composed Image Retrieval</strong></h2>
 
 <p align="center">
   <span style="font-size: 16px;">
@@ -18,7 +20,7 @@
   </span>
   <br><br>
   <span style="font-size: 15px; font-style: italic; color: #555;">
-    <sup>1</sup> Institute of Automation, Chinese Academy of Sciences (CASIA) &nbsp;&nbsp;&nbsp;
+    <sup>1</sup> Institute of Automation, Chinese Academy of Sciences (CASIA) <br>
     <sup>2</sup> University of Chinese Academy of Sciences (UCAS) <br>
     <sup>3</sup> Xi'an Jiaotong University (XJTU) &nbsp;&nbsp;&nbsp;
     <sup>4</sup> Tencent &nbsp;&nbsp;&nbsp;
@@ -28,7 +30,7 @@
   </span>
 </p>
 
-<h5 align="center">🎉 <b>Accepted by CVPR 2026</b> 🎉</h3>
+<h5 align="center">🎉 <b>Accepted by CVPR 2026</b> 🎉</h5>
 
 <br>
 
@@ -50,7 +52,8 @@
 <br>
 
 <div align="center">
-  ⭐ <b>If you find our OACIR task, OACIRR dataset, or AdaFocal codebase helpful to your research, please give this repo a star! ⭐ <br>It really encourages our open-source journey. Thank you! 💖</b>
+  ⭐ <b>If you find our OACIR codebase helpful to your research, please give this repo a star! ⭐ <br>
+  💖 It really encourages our open-source journey. Thank you! 💖</b>
 </div>
 
 <br>
@@ -218,7 +221,7 @@ Our extensive evaluation demonstrates that the **OACIR** task presents a profoun
 
 We provide two variants of the **AdaFocal** weights on HuggingFace. You can instantly evaluate them using our provided `evaluate.sh` script.
 
-| Model Variant | Component Type | $R_{ID}@1$ (Avg) | $R@1$ (Avg) | $R@5$ (Avg) | Overall Avg | Weights Download |
+| Model Variant | Component Type | R<sub>ID</sub>@1 (Avg) | R@1 (Avg) | R@5 (Avg) | Overall Avg | Weights Download |
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|
 | **AdaFocal (Scalar $\beta$)** | Default Configuration | 81.52 | 63.08 | 90.98 | **78.53** | [🤗 Download](https://huggingface.co/HaHaJun1101/AdaFocal) |
 | **AdaFocal (Vector $\vec{\beta}$)** | Vector Ablation | 81.99 | 63.06 | 91.35 | **78.80** | [🤗 Download](https://huggingface.co/HaHaJun1101/AdaFocal) |
@@ -256,6 +259,7 @@ pip install -r requirements.txt
 To fully reproduce our experiments ( including OACIRR benchmarks and cross-task generalization ), please download the datasets and organize them into a unified `./Datasets/` directory under the project root.
 
 **2.1 Download the OACIRR Dataset**
+
 Download **OACIRR** from [HuggingFace](https://huggingface.co/datasets/HaHaJun1101/OACIRR#downloading-the-oacirr-dataset), and unzip the compressed image files.
 ```bash
 # Recommended: Use Git LFS
@@ -264,6 +268,7 @@ git clone https://huggingface.co/datasets/HaHaJun1101/OACIRR ./Datasets/OACIRR
 ```
 
 **2.2 Overall Dataset Directory Structure**
+
 Ensure your workspace matches the following structure.
 *( Note: For standard CIR benchmarks like CIRR, FashionIQ, CIRCO, and GeneCIS, please refer to their official repositories for download instructions ).*
 ```text
@@ -352,16 +357,20 @@ OACIRR serves as a rigorous benchmark for existing Universal Multimodal Retrieva
 Training from scratch, fine-tuning, or performing ablation studies is fully automated via the `train.sh` script.
 
 **4.1 Basic Configuration**
+
 Open `train.sh` and customize your hyperparameters. Set `DATASET="Union"` to train jointly on all 4 domains, or select a specific subset (e.g., `"Fashion"`). Adjust `LR`, `BATCH_SIZE`, and `EPOCHS` as needed.
 
 **4.2 Flexible Initialization**
+
 - **Train from BLIP-2:** Leave `MODEL_WEIGHT=""`. The script will automatically download the pre-trained Q-Former weights from LAVIS.
 - **Transfer Learning / Resume Training:** Provide the path to a previous checkpoint (e.g., a model pre-trained on CIRR/FashionIQ) in `MODEL_WEIGHT="/path/to/checkpoint.pt"`.
 
 **4.3 Model Selection**
+
 Set `MODEL_NAME` to `"oacir_adafocal"` for our proposed method ( ensure `HIGHLIGHT_TRAINING` is uncommented ), or `"oacir_baseline"` for standard CIR training.
 
 **4.4 Start Training**
+
 Run the script:
 ```bash
 bash train.sh
