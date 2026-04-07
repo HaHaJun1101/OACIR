@@ -61,8 +61,7 @@
 ---
 
 ## 🔔 News
-
-- **⏳ [Coming Soon]: *AdaFocal* model checkpoints will be released!**
+- **🔥 [2026-04-07]: The *AdaFocal* model checkpoints are officially released on HuggingFace!**
 - **🔥 [2026-04-03]: The full Training/Evaluation code are officially released and is now available for use!**
 - **🔥 [2026-03-25]: The OACIRR Benchmark is officially released on HuggingFace!**
 - **🎉 [2026-02-21]: Our paper "Beyond Semantic Search: Towards Referential Anchoring in Composed Image Retrieval" has been accepted to CVPR 2026!**
@@ -223,8 +222,8 @@ We provide two variants of the **AdaFocal** weights on HuggingFace. You can inst
 
 | Model Variant | Component Type | R<sub>ID</sub>@1 (Avg) | R@1 (Avg) | R@5 (Avg) | Overall Avg | Weights Download |
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|
-| **AdaFocal (Scalar $\beta$)** | Default Configuration | 81.52 | 63.08 | 90.98 | **78.53** | [🤗 Download](https://huggingface.co/HaHaJun1101/AdaFocal) |
-| **AdaFocal (Vector $\vec{\beta}$)** | Vector Ablation | 81.99 | 63.06 | 91.35 | **78.80** | [🤗 Download](https://huggingface.co/HaHaJun1101/AdaFocal) |
+| **AdaFocal (Scalar $\beta$)** | Default Configuration | 81.52 | 63.08 | 90.98 | **78.53** | [🤗 Download](https://huggingface.co/HaHaJun1101/AdaFocal/blob/main/adafocal_scalar.pt) |
+| **AdaFocal (Vector $\vec{\beta}$)** | Vector Ablation | 81.99 | 63.06 | 91.35 | **78.80** | [🤗 Download](https://huggingface.co/HaHaJun1101/AdaFocal/blob/main/adafocal_vector.pt) |
 
 ---
 
