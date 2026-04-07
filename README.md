@@ -35,8 +35,8 @@
 <br>
 
 <div align="center">
-  <a href='https://arxiv.org/abs/xxxx.xxxxx'><img src='https://img.shields.io/badge/Paper-arXiv:xxxx.xxxxx-B31B1B.svg?logo=arxiv&logoColor=white'></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <a href='https://oacir.github.io/'><img src='https://img.shields.io/badge/Project-Page-FF9900.svg?logo=Google-Chrome&logoColor=white'></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href='https://arxiv.org/abs/2604.xxxxx'><img src='https://img.shields.io/badge/Paper-arXiv:2604.xxxxx-B31B1B.svg?logo=arxiv&logoColor=white'></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href='https://hahajun1101.github.io/OACIR/'><img src='https://img.shields.io/badge/Project-Page-FF9900.svg?logo=Google-Chrome&logoColor=white'></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <a href='https://huggingface.co/datasets/HaHaJun1101/OACIRR'><img src='https://img.shields.io/badge/Dataset-OACIRR-0070D0.svg?logo=HuggingFace&logoColor=white'></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <a href='https://huggingface.co/HaHaJun1101/AdaFocal'><img src='https://img.shields.io/badge/Weights-AdaFocal-1FA050.svg?logo=HuggingFace&logoColor=white'></a>
   <br>
