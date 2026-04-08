@@ -35,7 +35,7 @@
 <br>
 
 <div align="center">
-  <a href='https://arxiv.org/abs/2604.xxxxx'><img src='https://img.shields.io/badge/Paper-arXiv:2604.xxxxx-B31B1B.svg?logo=arxiv&logoColor=white'></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href='https://arxiv.org/abs/2604.05393'><img src='https://img.shields.io/badge/Paper-arXiv:2604.05393-B31B1B.svg?logo=arxiv&logoColor=white'></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <a href='https://hahajun1101.github.io/OACIR/'><img src='https://img.shields.io/badge/Project-Page-FF9900.svg?logo=Google-Chrome&logoColor=white'></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <a href='https://huggingface.co/datasets/HaHaJun1101/OACIRR'><img src='https://img.shields.io/badge/Dataset-OACIRR-0070D0.svg?logo=HuggingFace&logoColor=white'></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <a href='https://huggingface.co/HaHaJun1101/AdaFocal'><img src='https://img.shields.io/badge/Weights-AdaFocal-1FA050.svg?logo=HuggingFace&logoColor=white'></a>
@@ -396,7 +396,15 @@ This will generate an intuitive `retrieval_results.html` in the same directory a
 
 ## ✒️ Citation
 
-If you find our work, dataset, or codebase useful, please consider citing our paper.
+If you find our work, codebase, dataset, or models useful, please consider citing our paper:
+```bibtex
+@article{yang2026beyond,
+  title={Beyond Semantic Search: Towards Referential Anchoring in Composed Image Retrieval},
+  author={Yang, Yuxin and Zhou, Yinan and Chen, Yuxin and Zhang, Ziqi and Ma, Zongyang and Yuan, Chunfeng and Li, Bing and Gao, Jun and Hu, Weiming},
+  journal={arXiv preprint arXiv:2604.05393},
+  year={2026}
+}
+```
 
 ---
 
