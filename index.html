@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OACIR: Object-Anchored Composed Image Retrieval</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Exo+2:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==================== 全局暗黑主题 ==================== */
+        body {
+            background-color: #050505;
+            color: #eeeeee;
+            font-family: 'IBM Plex Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.7;
+            /* 替换鼠标指针为 32x32 像素的 logo_cursor.png */
+            cursor: url('https://huggingface.co/datasets/HaHaJun1101/OACIRR/resolve/main/figures/OACIR_cursor.png') 16 16, auto;
+            overflow-x: hidden;
+        }
+
+        /* 鼠标跟随的金色光晕 */
+        .cursor-glow {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(225, 192, 115, 0.15) 0%, rgba(225, 192, 115, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            mix-blend-mode: screen;
+            transition: width 0.1s, height 0.1s;
+        }
+
+        /* ==================== 首屏 (Hero Section) ==================== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            width: 90%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            height: 120px; 
+            margin-bottom: 40px;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
+        }
+
+        /* 标题排版：大小与颜色 */
+        .title {
+            font-family: 'Teko', sans-serif;
+            font-style: italic;
+            width: 100%;
+        }
+        .title-line1 {
+            background: linear-gradient(to right, #fcf6ba, #bf953f, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 70px; /* 第一行极大 */
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            line-height: 1.1;
+        }
+        .title-line2 {
+            color: #ffffff;
+            font-size: 60px; /* 第二行适中 */
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            margin-bottom: 40px;
+        }
+
+        .conference {
+            font-family: 'Teko', sans-serif;
+            font-size: 30px;
+            font-weight: 500;
+            color: #ffcc00;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        /* 作者与单位 */
+        .authors {
+            font-family: 'Teko', sans-serif;
+            font-size: 28px;
+            font-weight: 400;
+            font-style: italic; /* 增加斜体 */
+            color: #ffffff;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+        .authors sup {
+            color: #888888;
+            font-size: 15px;
+            margin-left: 2px;
+        }
+        .institutions {
+            font-family: 'Teko', sans-serif;
+            font-size: 20px;
+            font-weight: 300;
+            font-style: italic; /* 增加斜体 */
+            color: #aaaaaa;
+            letter-spacing: 1px;
+        }
+
+        /* 浅灰色药丸按钮 (Official Icons) */
+        .links-container {
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 50px;
+        }
+        .btn {
+            background-color: #d1d5db;
+            color: #0f172a;
+            padding: 8px 28px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-family: 'Teko', sans-serif;
+            font-style: italic;
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255,255,255,0.2);
+        }
+        .btn svg {
+            width: 22px;
+            height: 22px;
+            margin-right: 10px;
+            fill: currentColor;
+        }
+        .btn img {
+            width: 22px;
+            height: 22px;
+            margin-right: 10px;
+        }
+
+        /* ==================== 内容流 ==================== */
+        .content-wrapper {
+            width: 75%;
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 20px 20px 100px 20px;
+        }
+
+        .section {
+            margin-bottom: 100px;
+        }
+
+        .section-title {
+            font-family: 'Teko', sans-serif;
+            font-size: 45px;
+            font-style: italic;
+            font-weight: 500;
+            color: #ffffff;
+            text-align: center;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        .section p {
+            font-size: 18px;
+            color: #d1d5db;
+            text-align: justify; 
+            font-weight: 400;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        /* ---------------- 琉璃暗金卡片 (What Did We Do?) ---------------- */
+        .tldr-card {
+            background: linear-gradient(145deg, rgba(30,30,30,0.8) 0%, rgba(10,10,10,0.8) 100%);
+            border: 1px solid rgba(226, 192, 115, 0.15);
+            border-left: 6px solid #bf953f;
+            border-radius: 12px;
+            padding: 35px 45px;
+            margin: 0 auto 80px auto;
+            box-shadow: 0 10px 40px rgba(191, 149, 63, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        /* 卡片内部的微光效果 */
+        .tldr-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(226, 192, 115, 0.03) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .tldr-title {
+            font-family: 'Teko', sans-serif;
+            font-size: 38px;
+            color: #fcf6ba;
+            margin-top: 0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            letter-spacing: 1px;
+            font-style: italic;
+        }
+        .tldr-title svg {
+            width: 32px;
+            height: 32px;
+            margin-right: 12px;
+            fill: #fcf6ba;
+        }
+        .tldr-text {
+            font-size: 18px;
+            color: #e2e8f0;
+            line-height: 1.8;
+            font-weight: 400;
+            text-align: justify;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+        .tldr-text strong {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        /* ---------------- 图片 & 轮播图 ---------------- */
+        img.content-img {
+            max-width: 100%;
+            display: block;
+            margin: 0 auto;
+            border-radius: 8px;
+            background-color: #ffffff; /* 自动给镂空透明图片垫上白色背景 */
+            padding: 15px; /* 让白色背景稍微大一圈，像个高级画框 */
+            box-sizing: border-box;
+        }
+        
+        .caption {
+            text-align: center;
+            font-size: 15px;
+            color: #888888;
+            font-style: italic;
+            margin-top: 15px;
+            margin-bottom: 40px;
+        }
+
+        .carousel {
+            position: relative;
+            max-width: 100%;
+            margin: auto;
+            overflow: hidden;
+            border-radius: 8px;
+            background-color: #050505; /* 轮播图的空白两侧自动用纯黑填充 */
+        }
+        .carousel-images {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            align-items: center; /* 让所有不同高度的图片在垂直方向居中 */
+        }
+        /* 👇 新增的幻灯片容器，用于固定高度 */
+        .slide {
+            width: 100%;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 600px; /* 在这里调整所有轮播图的统一高度 */
+            padding: 20px 60px; /* 强制给幻灯片四周留出绝对的黑色安全距离（左右各留60px的黑边），防止滑动时粘连 */
+            box-sizing: border-box; /* 确保这60px黑边是向内压缩的，绝不会撑破100%的总宽度 */
+        }
+        .slide img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain; /* 保持原生长宽比 */
+            background-color: #ffffff; /* 同样给轮播里的镂空图垫上白底 */
+            padding: 15px; /* 白底边框的厚度 */
+            border-radius: 8px;
+            box-sizing: border-box; /* 让这15px的白底边框包含在100%的最大宽高内，彻底消灭溢出 */
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8); /* 顺手加个黑色的悬浮阴影，质感拉满！ */
+        }
+
+        /* 轮播图左右控制按钮 */
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            padding: 16px;
+            margin-top: -22px;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            transition: 0.3s ease;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            background-color: rgba(0,0,0,0.4);
+            border: none;
+        }
+        .next { right: 0; border-radius: 3px 0 0 3px; }
+        .prev:hover, .next:hover { background-color: rgba(0,0,0,0.8); }
+
+        /* ---------------- 表格样式 ---------------- */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 15px;
+            background-color: #111111;
+            color: #e2e8f0;
+        }
+        th, td {
+            padding: 10px 12px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+        th {
+            background-color: #1a1a1a;
+            font-family: 'Teko', sans-serif;
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+        tr:hover { background-color: #222222; }
+
+        .c-fashion { color: #ff6b6b; }
+        .c-car { color: #ffad33; }
+        .c-product { color: #4da6ff; }
+        .c-landmark { color: #4dff88; }
+        .highlight-row { background-color: #2a2010; }
+        .highlight-text { color: #ffd700; font-weight: bold; }
+
+        /* ---------------- BibTeX ---------------- */
+        pre {
+            background-color: #0a0a0a;
+            color: #d1d5db; /* 变为了优雅的白色 */
+            padding: 25px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            border: 1px solid #333;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        .keyword { color: #bf953f; font-weight: bold; } /* 关键字标金 */
+
+        /* ---------------- TLDR 动画附加样式 ---------------- */
+        #tldr-title {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        #tldr-title.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .typewriter-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 18px;
+            background-color: #bf953f;
+            margin-left: 2px;
+            vertical-align: text-bottom;
+            animation: blink 0.8s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 鼠标光晕 Element -->
+<div class="cursor-glow"></div>
+
+<!-- ==================== 首屏 (Hero Section) ==================== -->
+<div class="hero">
+    <img src="https://huggingface.co/datasets/HaHaJun1101/OACIRR/resolve/main/figures/OACIR_logo.png" alt="OACIR Logo" class="logo"> 
+
+    <div class="title">
+        <div class="title-line1">BEYOND SEMANTIC SEARCH</div>
+        <div class="title-line2">Towards Referential Anchoring in Composed Image Retrieval</div>
+    </div>
+
+    <div class="conference">🎉 Accepted by CVPR 2026 🎉</div>
+
+    <div class="authors">
+        Yuxin Yang <sup>1,2</sup> &nbsp;&nbsp; Yinan Zhou <sup>3,4</sup> &nbsp;&nbsp; Yuxin Chen <sup>4</sup> &nbsp;&nbsp; Ziqi Zhang <sup>1</sup> &nbsp;&nbsp; Zongyang Ma <sup>1</sup><br>
+        Chunfeng Yuan <sup>1,2,*</sup> &nbsp;&nbsp; Bing Li <sup>1,2,5</sup> &nbsp;&nbsp; Jun Gao <sup>6</sup> &nbsp;&nbsp; Weiming Hu <sup>1,2,7</sup>
+    </div>
+
+    <div class="institutions">
+        <sup>1</sup> CASIA &nbsp;&nbsp; <sup>2</sup> UCAS &nbsp;&nbsp; <sup>3</sup> XJTU &nbsp;&nbsp; <sup>4</sup> Tencent &nbsp;&nbsp; <sup>5</sup> PeopleAI &nbsp;&nbsp; <sup>6</sup> HelloGroup &nbsp;&nbsp; <sup>7</sup> ShanghaiTech<br>
+        <sup>*</sup> Corresponding author
+    </div>
+
+    <!-- Official SVG/IMG Icons used for Buttons -->
+    <div class="links-container">
+        <a href="https://arxiv.org/abs/2604.05393" class="btn" target="_blank">
+            <img src="https://huggingface.co/datasets/HaHaJun1101/OACIRR/resolve/main/figures/arxiv_logo.svg" alt="arXiv">
+            Paper
+        </a>
+        <a href="https://github.com/HaHaJun1101/OACIR" class="btn" target="_blank">
+            <!-- Official GitHub Octocat SVG -->
+            <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+            Code
+        </a>
+        <a href="https://huggingface.co/datasets/HaHaJun1101/OACIRR" class="btn" target="_blank">
+            <!-- Official Hugging Face Icon Image -->
+            <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="HuggingFace">
+            Dataset
+        </a>
+        <a href="https://huggingface.co/HaHaJun1101/AdaFocal" class="btn" target="_blank">
+            <!-- Official Hugging Face Icon Image -->
+            <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="HuggingFace">
+            Models
+        </a>
+    </div>
+</div>
+
+<!-- ==================== 内容流 ==================== -->
+<div class="content-wrapper">
+
+    <!-- What did we do (TLDR Card) -->
+    <div class="tldr-card" id="tldr-section">
+        <h2 class="tldr-title" id="tldr-title">
+            <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7zM9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9v1z"/></svg>
+            What Did We Do?
+        </h2>
+        <p class="tldr-text" id="tldr-text">
+            Traditional Composed Image Retrieval (CIR) enables flexible multimodal search but inherently prioritizes broad semantic matching, often failing to retrieve a user-specified instance across contexts. To bridge this gap, we introduce <strong>Object-Anchored Composed Image Retrieval (OACIR)</strong>, a novel fine-grained retrieval task that mandates strict <em>instance-level consistency</em>.<br><br>
+            To advance research on this challenging task, we construct <strong>OACIRR</strong>, the first large-scale, multi-domain benchmark comprising over 160K quadruples. We further propose <strong>AdaFocal</strong>, an efficient framework featuring a Context-Aware Attention Modulator (CAAM) that dynamically intensifies attention on the anchored instance region.
+        </p>
+    </div>
+
+    <!-- Task -->
+    <div class="section">
+        <h2 class="section-title">OACIR Task</h2>
+        <img src="https://huggingface.co/datasets/HaHaJun1101/OACIRR/resolve/main/figures/OACIR_task_overview.png" class="content-img" style="max-width: 80%;" alt="OACIR Task Overview">
+        <div class="caption">Overview of the Object-Anchored Composed Image Retrieval (OACIR) task and our OACIRR dataset.</div>
+
+        <p>The paradigm of image retrieval has progressively evolved toward more flexible and user-oriented forms of interaction. While traditional single-modal methods often struggle to express complex user intentions, Composed Image Retrieval (CIR) has emerged as a powerful paradigm to address this limitation. By combining a reference image with modification text, CIR leverages the synergy between visual and textual modalities to retrieve semantically aligned target images.</p>
+        <p>Despite its flexibility, the fundamental design of CIR prioritizes semantic matching over instance-level fidelity. The reference image in a conventional CIR query often serves as a coarse-grained visual anchor, rendering the retrieval of a specific instance unreliable, particularly in the presence of visually similar distractors. In many practical applications, emphasizing concrete instance fidelity is often more critical than achieving broad semantic alignment.</p>
+        <p>In this work, we propose <strong>Object-Anchored Composed Image Retrieval (OACIR)</strong>, a novel fine-grained image retrieval task that mandates strict instance-level consistency. OACIR extends the conventional compositional query by incorporating an anchored instance. The objective is to retrieve a target image that semantically satisfies the textual modification while strictly preserving the identical anchored instance.</p>
+    </div>
+
+    <!-- Dataset -->
+    <div class="section">
+        <h2 class="section-title">OACIRR Dataset</h2>
+        <p><strong>OACIRR</strong> (Object-Anchored Composed Image Retrieval on Real-world images) is the first large-scale, multi-domain benchmark tailored for the OACIR task.</p>
+        <p>Unlike traditional Composed Image Retrieval (CIR), which inherently prioritizes broad semantic matching, <strong>OACIRR</strong> mandates strict <strong>instance-level fidelity</strong>. By anchoring a specific object via a bounding box in the reference image, it requires models to retrieve a target image that semantically satisfies the textual modification while <strong>strictly preserving the identical anchored instance</strong>.</p>
+        <p><strong>OACIRR</strong> comprises a <strong>unified training set</strong> of <strong>127K quadruples</strong> covering <strong>2,647 instances</strong>, along with an extensive <strong>evaluation benchmark</strong> containing <strong>33.4K queries</strong> across <strong>1,238 instances</strong> from four diverse domains: <span class="c-fashion">Fashion</span>, <span class="c-car">Car</span>, <span class="c-product">Product</span>, and <span class="c-landmark">Landmark</span>. The benchmark is enriched with over <strong>26.6K curated distractor instances</strong> to form challenging galleries.</p>
+        <p>Collectively, OACIRR encompasses 160K+ quadruples, providing both a high-quality foundational dataset and a rigorous, comprehensive benchmark for the OACIR task.</p>
+
+        <!-- Dataset Carousel -->
+        <div class="carousel" id="datasetCarousel">
+            <div class="carousel-images" id="datasetImages">
+                <div class="slide"><img src="https://huggingface.co/datasets/HaHaJun1101/OACIRR/resolve/main/figures/OACIRR_construction_pipeline.png" alt="Construction Pipeline"></div>
+                <div class="slide"><img src="https://huggingface.co/datasets/HaHaJun1101/OACIRR/resolve/main/figures/instance_distribution.png" alt="Instance Distribution"></div>
+                <div class="slide"><img src="https://huggingface.co/datasets/HaHaJun1101/OACIRR/resolve/main/figures/instance_collage.png" alt="Collage Examples"></div>
+            </div>
+            <button class="prev" onclick="moveSlide(-1, 'datasetImages')">&#10094;</button>
+            <button class="next" onclick="moveSlide(1, 'datasetImages')">&#10095;</button>
+        </div>
+        <div class="caption">Slide to view the dataset construction pipeline, instance statistics, and instance examples.</div>
+    </div>
+
+    <!-- Method -->
+    <div class="section">
+        <h2 class="section-title">AdaFocal Framework</h2>
+        <img src="https://huggingface.co/datasets/HaHaJun1101/OACIRR/resolve/main/figures/AdaFocal_framework.png" class="content-img" style="max-width: 85%;" alt="AdaFocal Framework">
+        <div class="caption">Overall architecture of our proposed AdaFocal framework.</div>
+
+        <p>To address the core challenges of the OACIR task, we propose <strong>AdaFocal</strong>, an effective framework that dynamically modulates visual attention for precise, instance-level retrieval. Our approach augments a multimodal fusion backbone with a lightweight <strong>Context-Aware Attention Modulator (CAAM)</strong>, enabling a nuanced balance between instance fidelity and compositional reasoning.</p>
+        <p>Specifically, <strong>AdaFocal</strong> employs a two-stage reasoning process: <em>Contextual Perception</em> and <em>Adaptive Focus</em>. It first perceives the query's compositional context to predict a modulation scalar (β). This learned signal then drives an Attention Activation Mechanism, which explicitly and adaptively intensifies the visual focus on the user-specified instance region (provided via bounding box) during multimodal feature fusion.</p>
+        <p>By dynamically re-weighting the attention distribution, <strong>AdaFocal</strong> seamlessly synthesizes the anchored instance, the global visual scene, and the textual modification into a coherent representation, establishing a robust and flexible baseline for identity-preserving retrieval.</p>
+    </div>
+
+    <!-- Benchmark -->
+    <div class="section">
+        <h2 class="section-title">Benchmark Results</h2>
+        <p>Our extensive evaluation demonstrates that the <strong>OACIR</strong> task presents a profound challenge to existing models. While current Universal Multimodal Retrieval (UMR) and Composed Image Retrieval (CIR) paradigms struggle with instance-level fidelity, our proposed <strong>AdaFocal</strong> establishes a robust and effective baseline.</p>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                  <tr>
+                    <th rowspan="2">Domain</th>
+                    <th rowspan="2">Method</th>
+                    <th rowspan="2">Pretraining Data</th>
+                    <th colspan="3"><span class="c-fashion">Fashion</span></th>
+                    <th colspan="3"><span class="c-car">Car</span></th>
+                    <th colspan="3"><span class="c-product">Product</span></th>
+                    <th colspan="3"><span class="c-landmark">Landmark</span></th>
+                    <th rowspan="2">Avg.</th>
+                  </tr>
+                  <tr>
+                    <th>R<sub>ID</sub>@1</th><th>R@1</th><th>R@5</th>
+                    <th>R<sub>ID</sub>@1</th><th>R@1</th><th>R@5</th>
+                    <th>R<sub>ID</sub>@1</th><th>R@1</th><th>R@5</th>
+                    <th>R<sub>ID</sub>@1</th><th>R@1</th><th>R@5</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- UMR -->
+                  <tr>
+                    <td rowspan="5"><b>UMR</b></td>
+                    <td>UniIR-CLIP<sub>SF</sub></td><td>M-BEIR</td>
+                    <td>17.33</td><td>12.26</td><td>24.76</td>
+                    <td>32.67</td><td>16.95</td><td>41.89</td>
+                    <td>33.71</td><td>18.22</td><td>40.10</td>
+                    <td>29.47</td><td>15.51</td><td>43.24</td>
+                    <td>27.18</td>
+                  </tr>
+                  <tr>
+                    <td>UniIR-BLIP<sub>FF</sub></td><td>M-BEIR</td>
+                    <td>28.53</td><td>22.41</td><td>39.63</td>
+                    <td>37.21</td><td>19.97</td><td>46.51</td>
+                    <td>37.76</td><td>20.98</td><td>43.19</td>
+                    <td>31.71</td><td>17.14</td><td>52.12</td>
+                    <td>33.10</td>
+                  </tr>
+                  <tr>
+                    <td>LamRA-Ret</td><td>M-BEIR+NLI</td>
+                    <td>27.45</td><td>21.63</td><td>37.10</td>
+                    <td>61.03</td><td>35.44</td><td>74.51</td>
+                    <td>69.45</td><td>39.53</td><td>70.25</td>
+                    <td>58.64</td><td>32.58</td><td>68.74</td>
+                    <td>49.70</td>
+                  </tr>
+                  <tr>
+                    <td>MM-Embed</td><td>M-BEIR+MTEB</td>
+                    <td>41.38</td><td>34.55</td><td>52.50</td>
+                    <td>53.21</td><td>30.06</td><td>62.80</td>
+                    <td>71.03</td><td>41.47</td><td>71.15</td>
+                    <td>78.85</td><td>38.88</td><td>79.32</td>
+                    <td>54.60</td>
+                  </tr>
+                  <tr>
+                    <td>GME (7B)</td><td>UMRB</td>
+                    <td>44.98</td><td>39.24</td><td>60.18</td>
+                    <td>63.11</td><td>38.34</td><td>75.38</td>
+                    <td>83.44</td><td>54.60</td><td>84.15</td>
+                    <td>77.11</td><td>47.09</td><td>82.69</td>
+                    <td>62.53</td>
+                  </tr>
+                  <!-- CIR -->
+                  <tr>
+                    <td rowspan="2"><b>CIR</b></td>
+                    <td>SPRC (ViT-G)</td><td>CIRR</td>
+                    <td>28.62</td><td>25.79</td><td>44.48</td>
+                    <td>25.13</td><td>15.92</td><td>37.06</td>
+                    <td>54.39</td><td>34.85</td><td>62.31</td>
+                    <td>40.41</td><td>26.29</td><td>52.39</td>
+                    <td>37.30</td>
+                  </tr>
+                  <tr>
+                    <td>SPRC (ViT-G)</td><td><b>OACIRR (Ours)</b></td>
+                    <td>65.25</td><td>58.51</td><td>80.89</td>
+                    <td>72.87</td><td>49.82</td><td>89.57</td>
+                    <td>86.05</td><td>70.61</td><td>93.68</td>
+                    <td>76.32</td><td>56.04</td><td>89.00</td>
+                    <td>74.05</td>
+                  </tr>
+                  <!-- OACIR -->
+                  <tr>
+                    <td rowspan="2"><b>OACIR</b></td>
+                    <td>Baseline (ViT-G)</td><td rowspan="2"><b>OACIRR (Ours)</b></td>
+                    <td>69.07</td><td>58.76</td><td>81.44</td>
+                    <td>74.59</td><td>49.78</td><td>89.46</td>
+                    <td>87.48</td><td>69.53</td><td>93.66</td>
+                    <td>79.80</td><td>55.49</td><td>89.87</td>
+                    <td>74.91</td>
+                  </tr>
+                  <tr class="highlight-row">
+                    <td class="highlight-text">AdaFocal (ViT-G)</td>
+                    <td class="highlight-text">77.15</td><td class="highlight-text">65.31</td><td class="highlight-text">86.88</td>
+                    <td class="highlight-text">78.42</td><td class="highlight-text">53.63</td><td class="highlight-text">92.22</td>
+                    <td class="highlight-text">91.86</td><td class="highlight-text">74.11</td><td class="highlight-text">95.39</td>
+                    <td class="highlight-text">82.92</td><td class="highlight-text">58.47</td><td class="highlight-text">91.63</td>
+                    <td class="highlight-text">79.00</td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+    </div>
+
+    <!-- ==================== Qualitative Performance ==================== -->
+    <div class="section">
+        <h2 class="section-title">Qualitative Performance</h2>
+        <p>Visual comparisons demonstrating AdaFocal's superior ability to maintain instance-level fidelity while accurately reflecting complex contextual modifications.</p>
+
+        <!-- Qualitative Carousel -->
+        <div class="carousel" id="qualitativeCarousel">
+            <div class="carousel-images" id="qualitativeImages">
+                <div class="slide"><img src="https://huggingface.co/datasets/HaHaJun1101/OACIRR/resolve/main/figures/qualitative_comparison_A.png" alt="Qualitative Result A"></div>
+                <div class="slide"><img src="https://huggingface.co/datasets/HaHaJun1101/OACIRR/resolve/main/figures/qualitative_comparison_B.png" alt="Qualitative Result B"></div>
+            </div>
+            <button class="prev" onclick="moveSlide(-1, 'qualitativeImages')">&#10094;</button>
+            <button class="next" onclick="moveSlide(1, 'qualitativeImages')">&#10095;</button>
+        </div>
+    </div>
+
+    <!-- ==================== Citation ==================== -->
+    <div class="section">
+        <h2 class="section-title">Citation</h2>
+        <pre><code><span class="keyword">@inproceedings</span>{yang2026beyond,
+  title={Beyond Semantic Search: Towards Referential Anchoring in Composed Image Retrieval},
+  author={Yang, Yuxin and Zhou, Yinan and Chen, Yuxin and Zhang, Ziqi and Ma, Zongyang and Yuan, Chunfeng and Li, Bing and Gao, Jun and Hu, Weiming},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year={2026},
+  note={arXiv preprint arXiv:2604.05393}
+}</code></pre>
+    </div>
+
+</div>
+
+<!-- 互动脚本 -->
+<script>
+    // ========== 轮播图自动播放逻辑 ==========
+    let slideIndex = {
+        'datasetImages': 0,
+        'qualitativeImages': 0
+    };
+
+    function moveSlide(n, carouselId) {
+        const carousel = document.getElementById(carouselId);
+        if (!carousel) return;
+
+        const images = carousel.getElementsByTagName('img');
+        const totalImages = images.length;
+        if (totalImages === 0) return;
+
+        slideIndex[carouselId] += n;
+
+        if (slideIndex[carouselId] >= totalImages) {
+            slideIndex[carouselId] = 0;
+        } else if (slideIndex[carouselId] < 0) {
+            slideIndex[carouselId] = totalImages - 1;
+        }
+
+        const offset = -slideIndex[carouselId] * 100;
+        carousel.style.transform = `translateX(${offset}%)`;
+    }
+
+    // 每隔 5 秒钟自动滑动
+    setInterval(() => { moveSlide(1, 'datasetImages'); }, 5000);
+    setInterval(() => { moveSlide(1, 'qualitativeImages'); }, 5000);
+
+    // ========== 鼠标金色呼吸光晕逻辑 ==========
+    const glow = document.querySelector('.cursor-glow');
+    document.addEventListener('mousemove', (e) => {
+        // 让光晕平滑地跟随鼠标中心
+        glow.style.left = e.clientX + 'px';
+        glow.style.top = e.clientY + 'px';
+    });
+
+    // ========== 滚动触发的打字机动画逻辑 ==========
+    document.addEventListener("DOMContentLoaded", () => {
+        const tldrTitle = document.getElementById('tldr-title');
+        const tldrText = document.getElementById('tldr-text');
+        
+        // 1. 提取原有的 HTML 内容，并清空它以便打字机输出
+        const originalHTML = tldrText.innerHTML.trim();
+        tldrText.innerHTML = ''; 
+        
+        // 打字机函数：智能识别 HTML 标签，只对纯文本延迟
+        function typeWriterHTML(element, htmlString, speed) {
+            let i = 0;
+            let text = '';
+            let isTag = false;
+            
+            function type() {
+                if (i < htmlString.length) {
+                    let char = htmlString.charAt(i);
+                    text += char;
+                    i++;
+                    
+                    if (char === '<') isTag = true;
+                    if (char === '>') isTag = false;
+                    
+                    // 显示当前文字和闪烁光标
+                    element.innerHTML = text + '<span class="typewriter-cursor"></span>';
+                    
+                    if (isTag || char === '>') {
+                        // 如果遇到 HTML 标签，瞬间打印完毕，不加延迟
+                        type();
+                    } else {
+                        // 纯文本，加入大约 15ms 延迟 (总计约 10~12 秒完成)
+                        setTimeout(type, speed);
+                    }
+                } else {
+                    // 打字结束，移除光标
+                    element.innerHTML = text; 
+                }
+            }
+            type();
+        }
+
+        // 2. 监听滚动事件，当卡片进入视口时触发
+        const observerOptions = {
+            root: null,
+            threshold: 0.5 // 当卡片露出 30% 时触发
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // 触发标题淡入
+                    tldrTitle.classList.add('visible');
+                    
+                    // 等待半秒钟标题出来后，开始打字机动画
+                    setTimeout(() => {
+                        typeWriterHTML(tldrText, originalHTML, 15);
+                    }, 500);
+
+                    // 触发后立即取消监听，保证只执行一次
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        observer.observe(document.getElementById('tldr-section'));
+    });
+</script>
+
+</body>
+</html>
