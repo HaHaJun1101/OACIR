@@ -30,7 +30,7 @@
   </span>
 </p>
 
-<h5 align="center">🎉 <b>Accepted by CVPR 2026</b> 🎉</h5>
+<h4 align="center">🎉 <b>Accepted by CVPR 2026 (Highlight)</b> 🎉</h4>
 
 <br>
 
@@ -61,6 +61,7 @@
 ---
 
 ## 🔔 News
+- **🌟 [2026-04-09]: Our paper has been selected as a ✨*Highlight*✨ at CVPR 2026!**
 - **🔥 [2026-04-07]: The *AdaFocal* model checkpoints are officially released on HuggingFace!**
 - **🔥 [2026-04-03]: The full Training/Evaluation code are officially released and is now available for use!**
 - **🔥 [2026-03-25]: The OACIRR Benchmark is officially released on HuggingFace!**
@@ -126,7 +127,7 @@ Our extensive evaluation demonstrates that the **OACIR** task presents a profoun
     </thead>
     <tbody>
       <tr>
-        <td rowspan="5" align="center" valign="middle"><b>UMR</b></td>
+        <td rowspan="6" align="center" valign="middle"><b>UMR</b></td>
         <td>UniIR-CLIP<sub>SF</sub></td>
         <td align="center">M-BEIR</td>
         <td align="center">17.33</td><td align="center">12.26</td><td align="center">24.76</td>
@@ -163,8 +164,16 @@ Our extensive evaluation demonstrates that the **OACIR** task presents a profoun
         <td align="center">54.60</td>
       </tr>
       <tr>
+        <td>GME (2B)</td>
+        <td rowspan="2" align="center" valign="middle">UMRB</td>
+        <td align="center">38.13</td><td align="center">32.14</td><td align="center">51.50</td>
+        <td align="center">58.84</td><td align="center">31.60</td><td align="center">66.03</td>
+        <td align="center">76.89</td><td align="center">44.11</td><td align="center">74.20</td>
+        <td align="center">73.86</td><td align="center">38.99</td><td align="center">75.61</td>
+        <td align="center">55.16</td>
+      </tr>
+      <tr>
         <td>GME (7B)</td>
-        <td align="center">UMRB</td>
         <td align="center">44.98</td><td align="center">39.24</td><td align="center">60.18</td>
         <td align="center">63.11</td><td align="center">38.34</td><td align="center">75.38</td>
         <td align="center">83.44</td><td align="center">54.60</td><td align="center">84.15</td>
