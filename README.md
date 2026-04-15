@@ -127,7 +127,7 @@ Our extensive evaluation demonstrates that the **OACIR** task presents a profoun
     </thead>
     <tbody>
       <tr>
-        <td rowspan="6" align="center" valign="middle"><b>UMR</b></td>
+        <td rowspan="8" align="center" valign="middle"><b>UMR</b></td>
         <td>UniIR-CLIP<sub>SF</sub></td>
         <td align="center">M-BEIR</td>
         <td align="center">17.33</td><td align="center">12.26</td><td align="center">24.76</td>
@@ -179,6 +179,23 @@ Our extensive evaluation demonstrates that the **OACIR** task presents a profoun
         <td align="center">83.44</td><td align="center">54.60</td><td align="center">84.15</td>
         <td align="center">77.11</td><td align="center">47.09</td><td align="center">82.69</td>
         <td align="center">62.53</td>
+      </tr>
+      <tr>
+        <td>Qwen3-VL-Emb (2B)</td>
+        <td rowspan="2" align="center" valign="middle">-</td>
+        <td align="center">47.95</td><td align="center">37.74</td><td align="center">55.16</td>
+        <td align="center">65.98</td><td align="center">44.76</td><td align="center">80.76</td>
+        <td align="center">80.20</td><td align="center">29.01</td><td align="center">57.94</td>
+        <td align="center">66.71</td><td align="center">32.11</td><td align="center">66.51</td>
+        <td align="center">55.40</td>
+      </tr>
+      <tr>
+        <td>Qwen3-VL-Emb (8B)</td>
+        <td align="center">56.21</td><td align="center">46.48</td><td align="center">64.39</td>
+        <td align="center">75.77</td><td align="center">46.63</td><td align="center">81.62</td>
+        <td align="center">81.60</td><td align="center">35.69</td><td align="center">66.25</td>
+        <td align="center">70.01</td><td align="center">44.18</td><td align="center">76.76</td>
+        <td align="center">62.13</td>
       </tr>
       <tr>
         <td rowspan="2" align="center" valign="middle"><b>CIR</b></td>
