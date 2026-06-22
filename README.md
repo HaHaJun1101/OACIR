@@ -424,10 +424,11 @@ This will generate an intuitive `retrieval_results.html` in the same directory a
 
 If you find our work, codebase, dataset, or models useful, please consider citing our paper:
 ```bibtex
-@article{yang2026beyond,
+@inproceedings{yang2026beyond,
   title={Beyond Semantic Search: Towards Referential Anchoring in Composed Image Retrieval},
   author={Yang, Yuxin and Zhou, Yinan and Chen, Yuxin and Zhang, Ziqi and Ma, Zongyang and Yuan, Chunfeng and Li, Bing and Gao, Jun and Hu, Weiming},
-  journal={arXiv preprint arXiv:2604.05393},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  pages={31155--31165},
   year={2026}
 }
 ```
