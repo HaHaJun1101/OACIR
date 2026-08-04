@@ -435,6 +435,14 @@ If you find our work, codebase, dataset, or models useful, please consider citin
 
 ---
 
+## 📜 License
+
+The original OACIR code developed in this repository is released under the [MIT License](LICENSE).
+
+This repository also contains or builds upon third-party components, including [LAVIS](https://github.com/salesforce/LAVIS) and [SPRC](https://github.com/chunmeifeng/SPRC). These components remain subject to their respective upstream licenses and terms.
+
+---
+
 ## 🤝 Acknowledgements
 
 Our codebase is built upon [LAVIS](https://github.com/salesforce/LAVIS) and [SPRC](https://github.com/chunmeifeng/SPRC). We deeply thank the authors for their excellent open-source contributions!
